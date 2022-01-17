@@ -16,7 +16,7 @@ class Event:
             params: 
                 event: boolean; the event from the current cycle
             
-            returns: boolean; if the event from the previous cycle is False and the event from the current cycle is True
+            returns: boolean; if the event from the previous cycle is True and the event from the current cycle is True
         """
 
         return HistoryKeeper.get_last(self.name) and event
@@ -29,6 +29,16 @@ class Event:
             returns: None
         """
         HistoryKeeper.add(event, self.name, False)
+
+    def happened_last_cycle(self):
+        """ summary: uses HistoryKeeper.get_last() to get the event from the last cycle and see if it is True
+
+            params: None
+
+            returns: boolean; if the event was True last cycle
+        """
+
+        return HistoryKeeper.get_last(self.name)
 
 
 class TimedEvent:

@@ -1,4 +1,4 @@
-from base.drawable_objects import Dimensions
+from base.dimensions import Dimensions
 from base.important_variables import screen_length, screen_height
 from base.utility_functions import percentages_to_numbers
 from base.function import Function, TestCase
@@ -17,7 +17,10 @@ class FunctionField:
     output = None
 
     def __init__(self):
-        # TODO find out why
+        """ summary: initializes the component
+            params: None
+            returns: None
+        """
         # Have to reset this so it doesn't grow based off of other FunctionField objects
         self.components = []
         self.inputs = []
@@ -50,24 +53,6 @@ class FunctionField:
         """
         for component in components:
             self.components.append(component)
-
-    def is_valid(self):
-        return True
-        # TODO fix function
-        # is_valid = True
-        # for input_field in self.inputs:
-        #     input_portion: TextBox = input_field
-        #     if input_portion.text == "" or input_portion == input_portion.default_text:
-        #         is_valid = False
-        #
-        # for output in self.outputs:
-        #     output_portion: TextBox = output
-        #
-        #     if output_portion.text == "" or output_portion == output_portion.default_text:
-        #         is_valid = False
-
-        return is_valid
-
 
 
 class FunctionTestingScreen(Screen):
@@ -131,8 +116,8 @@ class FunctionTestingScreen(Screen):
         output_field = TextBoxWithTitle(18, "Expected Output", self.function.output_type, black, white)
         add_button = Button("+", 18, white, green)
         minus_button = Button("-", 18, white, red)
-        add_button.percentage_set_bounds(90, parameter_field_height * number_of_function_fields, 5, parameter_field_height)
-        minus_button.percentage_set_bounds(95, parameter_field_height * number_of_function_fields, 5, parameter_field_height)
+        add_button.percentage_set_dimensions(90, parameter_field_height * number_of_function_fields, 5, parameter_field_height)
+        minus_button.percentage_set_dimensions(95, parameter_field_height * number_of_function_fields, 5, parameter_field_height)
 
         add_button.add_click_action(self.add_function_field)
         minus_button.add_click_action(self.delete_function_field)
@@ -148,10 +133,12 @@ class FunctionTestingScreen(Screen):
         self.function_fields.append(function_field)
         self.function.number_of_outputs += 1
 
-    def get_function_fields(self):
-        return self.function_fields
 
     def run(self):
+        """ summary: changes the inputs and output for each test case based on the user's inputs
+            params: None
+            returns: None
+        """
         for function_field in self.function_fields:
             self.function.test_cases = []
             inputs = []

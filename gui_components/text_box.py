@@ -6,12 +6,14 @@ from base.events import Event
 from base.utility_classes import HistoryKeeper
 from gui_components.clickable_component import ClickableComponent
 from base.utility_functions import render_words, remove_last_ch
-from base.drawable_objects import GameObject, Dimensions
+from base.drawable_objects import GameObject
+from base.dimensions import Dimensions
 from base.important_variables import background_color, screen_height, screen_length, game_window
 import pygame
-pygame.init()
 
+pygame.init()
 tk = Tk()
+
 
 class TextBox(ClickableComponent):
     """A box with text inside of it (that text can be altered or can't be depending on the TextBox's attributes
@@ -19,6 +21,7 @@ class TextBox(ClickableComponent):
             1. Ctrl + v | Pastes the text inside the clipboard
             2. Ctrl + Backspace | Deletes all the text box's text
             3. Ctrl + e | Expands the text box to the size of the screen
+            4. Ctrl + Backspace | Deletes all the text inside the text box
     """
 
     text = ""
@@ -38,6 +41,7 @@ class TextBox(ClickableComponent):
     unexpanded_dimensions = None
     previous_components = None
     is_expanded = False
+
     def dict_keys_to_list(self, dict_keys):
         """ summary: turns dict_keys into a list by iterating over each dict_key and adding it to a list
 
@@ -52,6 +56,17 @@ class TextBox(ClickableComponent):
         return dict_key_list
 
     def __init__(self, text, font_size, is_editable, text_color, background_color):
+        """ summary: initializes the object
+
+            params:
+                text: String; the text that is displayed (can be altered if the text box is editable)
+                font_size: int; the size of the font
+                is_editable: boolean; if the text inside the text box can be edited
+                background_color: tuple; the (Red, Green, Blue) values of the text box's background
+            
+            returns: None
+        """
+
         self.text, self.font_size = text, font_size
         self.is_editable, self.text_color = is_editable, text_color
         self.background_color = background_color
@@ -75,6 +90,14 @@ class TextBox(ClickableComponent):
         self.expand_key_event = Event()
 
     def set_font(self, font_size):
+        """ summary: changes the text box's font
+            
+            params: 
+                font_size: int; the size of the text box's font
+            
+            returns: None
+        """
+        
         self.font = pygame.font.Font('freesansbold.ttf', font_size)
         text = self.font.render("a", True, background_color, background_color)
         text_rect = text.get_rect()
@@ -82,6 +105,11 @@ class TextBox(ClickableComponent):
         self.font_ch_height = text_rect.height
 
     def render(self):
+        """ summary: renders the text box
+            params: None
+            returns: None
+        """
+        
         # Needs to be hear, so doesn't draw over text
         GameObject.render(self)
 
@@ -89,18 +117,17 @@ class TextBox(ClickableComponent):
         current_height = self.y_coordinate
         max_index = len(self.text)
         max_text_length = int(self.length / self.font_ch_length)
-        words_and_locations = self.get_words_and_location()
         # It renders line by line, so if the string is too long it won't go off screen
         while current_index < max_index:
             last_cycle_index = current_index
-            last_word_index = self.get_last_word_index(words_and_locations, current_index + max_text_length)
+            last_word_index = self.get_last_word_index(current_index + max_text_length)
 
             # Code below prevents an endless cycling where the last word is too long, so it can't be rendering
             # Causing a never ending while loop
             if last_cycle_index == last_word_index:
                 last_word_index = len(self.text)
 
-            text_being_rendered = self.get_all_words(words_and_locations, current_index, last_word_index)
+            text_being_rendered = self.get_all_words(current_index, last_word_index)
 
             render_words(text_being_rendered, self.font, x_coordinate=self.x_coordinate,
                          y_coordinate=current_height, text_color=self.text_color, text_background=self.background_color)
@@ -116,7 +143,12 @@ class TextBox(ClickableComponent):
         self.text = new_text
 
 
-    def get_words_and_location(self):
+    def get_words_and_their_indexes(self):
+        """ summary: finds the words and locations of the text box's text
+            params: None
+            returns: dict {String: int}; the words of the text box's text and the start index of each of those words
+        """
+
         # If the text box is selected it should display a cursor otherwise it shouldn't
         self.text += "|" if self.is_selected and self.is_editable else ""
 
@@ -130,28 +162,56 @@ class TextBox(ClickableComponent):
 
             else:
                 word += ch
-        # The last word won't have a space after it, so I have to add it here (usually added by seeing if there is a space)
+
+        # The last word won't have a space after it, so I have to add it here
+        # Adding words usually added if there is a space
         words_and_locations[len(self.text)] = word
         return words_and_locations
 
-    def get_last_word_index(self, word_and_locations: dict, index):
-        word_indexes = sorted(word_and_locations.keys())
-        max_word_index = 0
-        for word_index in word_indexes:
-            if word_index <= index and word_index > max_word_index:
-                max_word_index = word_index
-        return max_word_index
+    def get_last_word_index(self, index):
+        """ summary: gets the index of the last word of the text
+            if the index is midway through a word it returns the index of the first character of the word before it
 
-    def get_all_words(self, words_and_locations, start_index, end_index):
-        all_indexes = words_and_locations.keys()
+            params:
+                index: int; the max index that won't overflow the text box's dimensions
+                if the text box's length is 9px and the text's length is 10px that would be overflowing
+
+            returns: int; the index of the last word
+        """
+
+        word_indexes = sorted(self.get_words_and_their_indexes().keys())
+        last_word_index = 0
+        for word_index in word_indexes:
+            if word_index <= last_word_index and word_index > last_word_index:
+                last_word_index = word_index
+
+        return last_word_index
+
+    def get_all_words(self, start_index, end_index):
+        """ summary: gets all the words from the start_index to the end_index
+            
+            params: 
+                start_index: int; the index of the first character in the first word
+                end_index: int; the index of the first character in last word
+
+            returns: all the words from the start_index to the end_index
+        """
+        
+        words_and_their_indexes = self.get_words_and_their_indexes()
+        all_indexes = words_and_their_indexes.keys()
         all_words = ""
 
         for index in all_indexes:
             if index >= start_index and index <= end_index:
-                all_words += words_and_locations.get(index) + " "
+                all_words += words_and_their_indexes.get(index) + " "
         return all_words
 
     def run(self):
+        """ summary: runs all the insertion and deletion logic for the text box
+            params: None
+            returns: None
+        """
+
         ClickableComponent.run(self)
 
         controls = pygame.key.get_pressed()
@@ -190,12 +250,12 @@ class TextBox(ClickableComponent):
 
         self.text += self.get_letters_typed()
 
-        delete_button_held_in = controls[pygame.K_BACKSPACE]
+        delete_button_held_in = controls[pygame.K_BACKSPACE] and self.delete_event.happened_last_cycle()
 
         if delete_button_held_in and mods & pygame.KMOD_CTRL:
             self.text = ""
 
-        elif delete_button_held_in and not self.delete_event.is_continuous(delete_button_held_in):
+        elif delete_button_held_in:
             self.text = remove_last_ch(self.text)
 
         expand_key_clicked = controls[pygame.K_e] and mods & pygame.KMOD_CTRL
@@ -248,7 +308,7 @@ class TextBox(ClickableComponent):
             if key == pygame.K_v and ctrl_v_clicked:
                 continue
 
-            letter_was_pressed = key_is_held_in and not self.key_events[x].is_continuous(key_is_held_in)
+            letter_was_pressed = key_is_held_in and not self.key_events[x].happened_last_cycle()
             # If the shift key is held in then the letter should be upper case otherwise it shouldn't
             if letter_was_pressed and pygame.KMOD_SHIFT & mods:
                 letters_pressed += self.key_to_letter.get(key).upper()
@@ -256,9 +316,8 @@ class TextBox(ClickableComponent):
             elif letter_was_pressed:
                 letters_pressed += self.key_to_letter.get(key)
 
-        if ctrl_v_clicked and not self.ctrl_v_event.is_continuous(ctrl_v_clicked):
+        if ctrl_v_clicked and not self.ctrl_v_event.happened_last_cycle():
             letters_pressed += tk.clipboard_get()
-
 
         return letters_pressed
 

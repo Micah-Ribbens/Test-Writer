@@ -67,6 +67,15 @@ class Window:
         self.components.remove(component)
 
     def component_is_selected(self, component):
+        """ summary: finds out of the component is selected by seeing if it got clicked
+            catches the Error if the component isn't of the type ClickableComponent
+
+            params:
+                component: Component; the component that is being tested if it is selected
+
+            returns: boolean; if the component got clicked this cycle (False if component isn't of type ClickableComponent)
+        """
+
         is_selected = False
         try:
             if component.got_clicked():

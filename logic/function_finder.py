@@ -70,6 +70,7 @@ class FunctionFinder:
         parameter_name = ""
         parameter_type = ""
         parameters = []
+        invalid_characters = "()"
 
         for ch in function_declaration_line:
             # TODO find another way to note have to use continue
@@ -80,16 +81,12 @@ class FunctionFinder:
                 parameters_have_started = True
 
 
-            if not is_finding_parameter_name and ch != " ":
-                parameter_type += ch
 
             if not is_finding_parameter_name and ch == " ":
                 is_finding_parameter_name = True
                 # TODO figure out a way to not use continue
                 continue
 
-            if is_finding_parameter_name and ch != " ":
-                parameter_name += ch
 
             if is_finding_parameter_name and ch == " ":
                 parameter = Parameter(parameter_type, parameter_name)
@@ -100,6 +97,11 @@ class FunctionFinder:
                 parameter_type = ""
                 is_finding_parameter_name = False
 
+            if not is_finding_parameter_name and ch != " " and not invalid_characters.__contains__(ch):
+                parameter_type += ch
+
+            if is_finding_parameter_name and ch != " " and not invalid_characters.__contains__(ch):
+                parameter_name += ch
 
 
         return parameters
@@ -143,6 +145,14 @@ class FunctionFinder:
         return re.search(regular_expression, line) is not None
 
     def get_output_type(self, line):
+        """ summary: goes over the line and returns the first word that isn't public, static, or void
+
+            params:
+                line: String; the line that function is declared on
+
+            returns: String; the output type of the function
+        """
+
         tokens_before_output_type = ["public", "static", "void"]
         output_type = ""
         letters = "abcdefghijklmnopqrstuvwxyz"

@@ -1,7 +1,6 @@
 from base.colors import *
 
 
-# TODO code with TestCase
 class TestCase:
     inputs = []
     output = None

@@ -92,7 +92,7 @@ def percentages_to_numbers(percent_right, percent_down, percent_length, percent_
             length: int; the number that percent_right and percent_length are based off of
             height: int; the number that percent_down
 
-        returns:
+        returns: None
     """
     return [
         percentage_to_number(percent_right, length),

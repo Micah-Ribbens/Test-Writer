@@ -1,5 +1,5 @@
 from base.colors import white, green
-from base.drawable_objects import Dimensions
+from base.dimensions import Dimensions
 from base.important_variables import screen_length, screen_height, game_window
 from gui.function_testing_screen import FunctionTestingScreen
 from gui_components.button import Button
