@@ -26,5 +26,6 @@ class SetUpper:
 
         all_functions_screen = AllFunctionsScreen(SetUpper.functions)
         game_window.add_screen(all_functions_screen)
-        game_window.display_screens([all_functions_screen])
+        game_window.display_screen(all_functions_screen)
         SetUpper.all_functions_screen = all_functions_screen
+

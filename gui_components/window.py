@@ -99,6 +99,9 @@ class Window:
             if screen.is_visible:
                 screen.run()
 
+            else:
+                continue
+
             all_components += screen.get_components()
             for component in screen.get_components():
                 component.is_visible = screen.is_visible
@@ -115,6 +118,9 @@ class Window:
             # Only visible components should be displayed onto the screen
             if component.is_visible:
                 component.render()
+
+            else:
+                continue
 
             if component.is_runnable:
                 component.run()
@@ -144,12 +150,12 @@ class Window:
         for component in components:
             component.is_visible = is_visible
 
-    def display_screens(self, screens):
+    def display_screen(self, visible_screen):
         """ summary: makes all screens disappear from the screen except the screen(s) in screen
             Also adds all screen in screens that aren't present in Window.screens
 
             params:
-                screens: List of Screen; the screens that should be displayed on the screen
+                visible_screen: List of Screen; the screens that should be displayed on the screen
 
             returns: None
         """
@@ -157,11 +163,18 @@ class Window:
             component.is_visible = False
 
         for screen in self.screens:
-            if not screens.__contains__(screen):
+            if screen != visible_screen:
                 screen.is_visible = False
-
             else:
                 screen.is_visible = True
+
+            for component in screen.get_components():
+                if screen != visible_screen:
+                    component.is_visible = False
+
+                else:
+                    component.is_visible  = True
+
 
     def display_components(self, components):
         """ summary: makes everything on the screen disappear except the component(s) in components
@@ -202,4 +215,3 @@ class Window:
         for component in screen.components:
             component.is_visible = is_visible
         screen.is_visible = is_visible
-        

@@ -124,7 +124,7 @@ class Grid:
             returns: int; the number of columns in the grid
         """
 
-        rows = self.max_rows if self.max_rows is not None else self.get_rows(self.number_of_items)
+        rows = self.max_rows if self.max_rows is not None else self.get_rows()
 
         # The overfill of number_of_items / max_rows must be an additional column
         # For instance if they are 5 items and there are 2 rows there must be 3 columns
@@ -142,7 +142,7 @@ class Grid:
         """
 
 
-        columns = self.max_columns if self.max_columns is not None else self.get_columns(self.number_of_items)
+        columns = self.max_columns if self.max_columns is not None else self.get_columns()
         # The overfill of number_of_items / max_columns must be an additional row
         # For instance if they are 5 items and there are 2 columns there must be 3 rows.
         rows = ceil(self.number_of_items / columns)

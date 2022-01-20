@@ -5,7 +5,7 @@ from gui_components.text_box import TextBox
 class Button(TextBox):
     """A clickable component that does an action when clicked"""
 
-    actions = []
+    action = None
 
     def __init__(self, text, font_size, text_color, background_color):
         """ summary: initializes the Button
@@ -28,7 +28,7 @@ class Button(TextBox):
             returns: None
         """
 
-        self.actions.append(action)
+        self.action = action
 
     def run(self):
         """ summary: calls ClickableComponent.run() and calls each action in Button.actions if the button got clicked
@@ -39,5 +39,5 @@ class Button(TextBox):
         ClickableComponent.run(self)
 
         if self.got_clicked() and self.action is not None:
-            for action in self.actions:
-                action()
+            self.action()
+

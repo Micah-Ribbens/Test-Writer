@@ -26,6 +26,7 @@ while True:
         except:
             home_screen.file_location_field.text = "File path doesn't exist"
             home_screen.file_location_field.default_text = "File path doesn't exist"
+            print("ERROR")
 
     if controls[pygame.K_d] and pygame.KMOD_CTRL & mods:
         test_writer = TestWriter()
@@ -36,6 +37,6 @@ while True:
     game_window.run()
 
     if controls[pygame.K_LEFT]:
-        game_window.display_screens([SetUpper.all_functions_screen])
+        game_window.display_screen(SetUpper.all_functions_screen)
 
     VelocityCalculator.time = time.time() - start_time

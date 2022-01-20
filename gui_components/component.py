@@ -30,8 +30,12 @@ class Component(ABC, Dimensions):
                 percent_height: int; the height (percentage of screen_height)
             returns: None
         """
-        numbers = percentages_to_numbers(percent_right, percent_down, percent_length, percent_height, screen_length, screen_height)
-        self.x_coordinate, self.y_coordinate, self.length, self.height = numbers
+        # numbers = percentages_to_numbers(percent_right, percent_down, percent_length, percent_height, screen_length, screen_height)
+        # self.x_coordinate, self.y_coordinate, self.length, self.height = numbers
+        self.x_coordinate = percentage_to_number(percent_right, screen_length)
+        self.y_coordinate = percentage_to_number(percent_down, screen_height)
+        self.length = percentage_to_number(percent_length, screen_length)
+        self.height = percentage_to_number(percent_height, screen_height)
 
     def number_set_dimensions(self, x_coordinate, y_coordinate, length, height):
         """ summary: sets the component's dimensions based on the values passed into this function

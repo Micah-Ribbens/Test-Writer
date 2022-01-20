@@ -4,6 +4,8 @@ from base.drawable_objects import GameObject
 from base.colors import *
 from base.important_variables import *
 from base.utility_functions import percentages_to_numbers
+
+
 class DropDownMenu(ClickableComponent):
     """A menu that can be expanded and unexpanded"""
 

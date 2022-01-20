@@ -79,6 +79,7 @@ class FunctionTestingScreen(Screen):
             params: None
             returns: all the screens components
         """
+
         components = []
         for field in self.function_fields:
             for component in field.components:
@@ -132,7 +133,6 @@ class FunctionTestingScreen(Screen):
         grid.turn_into_grid(parameter_fields + [output_field], None, None)
         self.function_fields.append(function_field)
         self.function.number_of_outputs += 1
-
 
     def run(self):
         """ summary: changes the inputs and output for each test case based on the user's inputs

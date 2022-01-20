@@ -52,7 +52,7 @@ class AllFunctionsScreen(Screen):
 
         grid = Grid(Dimensions(0, 0, screen_length, screen_height), 4, None, True)
         grid.turn_into_grid(buttons, None, None)
-        game_window.display_screens([self])
+        game_window.display_screen(self)
         self.buttons = buttons
         self.function_screens = function_screens
 
@@ -65,7 +65,7 @@ class AllFunctionsScreen(Screen):
             returns: None
         """
         index = self.function_names.index(function)
-        game_window.display_screens([function_screens[index]])
+        game_window.display_screen(function_screens[index])
 
 
 

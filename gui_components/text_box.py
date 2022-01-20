@@ -80,7 +80,6 @@ class TextBox(ClickableComponent):
         self.font_ch_length = one_letter.width
         self.font_ch_height = one_letter.height
 
-
         self.keys = self.dict_keys_to_list(self.key_to_letter.keys())
         for x in range(len(self.keys)):
             self.key_events.append(Event())
@@ -117,17 +116,18 @@ class TextBox(ClickableComponent):
         current_height = self.y_coordinate
         max_index = len(self.text)
         max_text_length = int(self.length / self.font_ch_length)
+        words_and_their_indexes = self.get_words_and_their_indexes()
         # It renders line by line, so if the string is too long it won't go off screen
         while current_index < max_index:
             last_cycle_index = current_index
-            last_word_index = self.get_last_word_index(current_index + max_text_length)
+            last_word_index = self.get_last_word_index(words_and_their_indexes, current_index + max_text_length)
 
             # Code below prevents an endless cycling where the last word is too long, so it can't be rendering
             # Causing a never ending while loop
             if last_cycle_index == last_word_index:
                 last_word_index = len(self.text)
 
-            text_being_rendered = self.get_all_words(current_index, last_word_index)
+            text_being_rendered = self.get_all_words(words_and_their_indexes, current_index, last_word_index)
 
             render_words(text_being_rendered, self.font, x_coordinate=self.x_coordinate,
                          y_coordinate=current_height, text_color=self.text_color, text_background=self.background_color)
@@ -153,11 +153,11 @@ class TextBox(ClickableComponent):
         self.text += "|" if self.is_selected and self.is_editable else ""
 
         word = ""
-        words_and_locations = {}
+        words_and_their_indexes = {}
         for x in range(len(self.text)):
             ch = self.text[x]
             if ch == " ":
-                words_and_locations[x] = word
+                words_and_their_indexes[x] = word
                 word = ""
 
             else:
@@ -165,39 +165,39 @@ class TextBox(ClickableComponent):
 
         # The last word won't have a space after it, so I have to add it here
         # Adding words usually added if there is a space
-        words_and_locations[len(self.text)] = word
-        return words_and_locations
+        words_and_their_indexes[len(self.text)] = word
+        return words_and_their_indexes
 
-    def get_last_word_index(self, index):
+    def get_last_word_index(self, words_and_their_indexes: dict, index):
         """ summary: gets the index of the last word of the text
             if the index is midway through a word it returns the index of the first character of the word before it
 
             params:
                 index: int; the max index that won't overflow the text box's dimensions
                 if the text box's length is 9px and the text's length is 10px that would be overflowing
+                words_and_indexes: dict {String: int}; the words of the text box's text and the start index of each of those words
 
             returns: int; the index of the last word
         """
 
-        word_indexes = sorted(self.get_words_and_their_indexes().keys())
-        last_word_index = 0
+        word_indexes = sorted(words_and_their_indexes.keys())
+        max_word_index = 0
         for word_index in word_indexes:
-            if word_index <= last_word_index and word_index > last_word_index:
-                last_word_index = word_index
+            if word_index <= index and word_index > max_word_index:
+                max_word_index = word_index
+        return max_word_index
 
-        return last_word_index
-
-    def get_all_words(self, start_index, end_index):
+    def get_all_words(self, words_and_their_indexes, start_index, end_index):
         """ summary: gets all the words from the start_index to the end_index
             
-            params: 
+            params:
+                words_and_their_indexes: dict {String: int}; the words of the text box's text and the start index of each of those words
                 start_index: int; the index of the first character in the first word
                 end_index: int; the index of the first character in last word
 
             returns: all the words from the start_index to the end_index
         """
         
-        words_and_their_indexes = self.get_words_and_their_indexes()
         all_indexes = words_and_their_indexes.keys()
         all_words = ""
 
@@ -250,7 +250,7 @@ class TextBox(ClickableComponent):
 
         self.text += self.get_letters_typed()
 
-        delete_button_held_in = controls[pygame.K_BACKSPACE] and self.delete_event.happened_last_cycle()
+        delete_button_held_in = controls[pygame.K_BACKSPACE] and not self.delete_event.happened_last_cycle()
 
         if delete_button_held_in and mods & pygame.KMOD_CTRL:
             self.text = ""
@@ -307,9 +307,9 @@ class TextBox(ClickableComponent):
             # If the user clicked ctrl_v then it shouldn't add 'v' to the text box
             if key == pygame.K_v and ctrl_v_clicked:
                 continue
-
             letter_was_pressed = key_is_held_in and not self.key_events[x].happened_last_cycle()
             # If the shift key is held in then the letter should be upper case otherwise it shouldn't
+
             if letter_was_pressed and pygame.KMOD_SHIFT & mods:
                 letters_pressed += self.key_to_letter.get(key).upper()
 
