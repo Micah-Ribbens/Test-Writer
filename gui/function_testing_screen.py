@@ -139,8 +139,8 @@ class FunctionTestingScreen(Screen):
             params: None
             returns: None
         """
+        self.function.test_cases = []
         for function_field in self.function_fields:
-            self.function.test_cases = []
             inputs = []
 
             for input_field in function_field.inputs:

@@ -104,7 +104,6 @@ class Window:
 
             all_components += screen.get_components()
             for component in screen.get_components():
-                component.is_visible = screen.is_visible
                 if self.component_is_selected(component):
                     selected_component = component
 

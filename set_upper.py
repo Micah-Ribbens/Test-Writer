@@ -11,7 +11,7 @@ class SetUpper:
     function_fields = []
     all_functions_screen: AllFunctionsScreen = None
 
-    def set_up(file_path):
+    def set_up(file_path, coding_language):
         """ summary: sets up the screen with all the functions based on the information from the file
 
             params:
@@ -21,8 +21,9 @@ class SetUpper:
         """
 
         lines = LineFinder.get_lines(file_path)
-        function_finder = FunctionFinder()
+        function_finder = FunctionFinder(coding_language)
         SetUpper.functions = function_finder.get_all_functions(lines)
+        print(SetUpper.functions)
 
         all_functions_screen = AllFunctionsScreen(SetUpper.functions)
         game_window.add_screen(all_functions_screen)

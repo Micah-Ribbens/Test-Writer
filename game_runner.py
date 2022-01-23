@@ -5,11 +5,14 @@ import pygame.key
 from base.important_variables import *
 from base.velocity_calculator import VelocityCalculator
 from gui.home_screen import HomeScreen
+from logic.python_language import PythonLanguage
 from logic.test_writer import TestWriter
 from set_upper import SetUpper
 
 home_screen = HomeScreen()
 game_window.add_screen(home_screen)
+
+coding_langauge = PythonLanguage()
 
 while True:
     controls = pygame.key.get_pressed()
@@ -20,16 +23,16 @@ while True:
             pygame.quit()
 
     if home_screen.submit_button.got_clicked():
-        try:
-            SetUpper.set_up(home_screen.file_location_field.text)
+        # try:
+        SetUpper.set_up(home_screen.file_location_field.text, coding_langauge)
 
-        except:
-            home_screen.file_location_field.text = "File path doesn't exist"
-            home_screen.file_location_field.default_text = "File path doesn't exist"
-            print("ERROR")
+        # except:
+        #     home_screen.file_location_field.text = "File path doesn't exist"
+        #     home_screen.file_location_field.default_text = "File path doesn't exist"
+        #     print("ERROR")
 
     if controls[pygame.K_d] and pygame.KMOD_CTRL & mods:
-        test_writer = TestWriter()
+        test_writer = TestWriter(coding_langauge)
         functions = SetUpper.functions
         test_writer.write_tests(functions)
         pygame.quit()

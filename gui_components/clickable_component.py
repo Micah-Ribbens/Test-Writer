@@ -12,6 +12,7 @@ class ClickableComponent(Component):
     """A component that can be clicked"""
 
     click_event = None
+
     amount_clicked = None
 
     def __init__(self):
