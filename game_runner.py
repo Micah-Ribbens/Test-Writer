@@ -23,13 +23,7 @@ while True:
             pygame.quit()
 
     if home_screen.submit_button.got_clicked():
-        # try:
         SetUpper.set_up(home_screen.file_location_field.text, coding_langauge)
-
-        # except:
-        #     home_screen.file_location_field.text = "File path doesn't exist"
-        #     home_screen.file_location_field.default_text = "File path doesn't exist"
-        #     print("ERROR")
 
     if controls[pygame.K_d] and pygame.KMOD_CTRL & mods:
         test_writer = TestWriter(coding_langauge)

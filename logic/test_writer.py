@@ -19,7 +19,7 @@ class TestWriter:
         self.coding_language = coding_language
 
     def write_tests(self, functions):
-        """ summary: writes the tests for each function in functions in a file called 'test.txt'
+        """ summary: writes the tests for each function in functions in a file called 'output.txt'
 
             params:
                 functions: List of Function; the functions that should be tested

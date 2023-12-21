@@ -23,7 +23,6 @@ class SetUpper:
         lines = LineFinder.get_lines(file_path)
         function_finder = FunctionFinder(coding_language)
         SetUpper.functions = function_finder.get_all_functions(lines)
-        print(SetUpper.functions)
 
         all_functions_screen = AllFunctionsScreen(SetUpper.functions)
         game_window.add_screen(all_functions_screen)

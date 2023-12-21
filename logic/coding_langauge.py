@@ -5,7 +5,7 @@ from base.function import Parameter
 
 
 class CodingLanguage(ABC):
-    test_file = open("test.txt", "w+")
+    test_file = open("output.txt", "w+")
     @abstractmethod
     def is_function(self, line):
         pass

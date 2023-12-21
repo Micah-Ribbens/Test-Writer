@@ -127,7 +127,7 @@ class FunctionTestingScreen(Screen):
         function_field.add_component(output_field, False)
 
         x, y, length, height = percentages_to_numbers(0, parameter_field_height * number_of_function_fields,
-                                                      90, parameter_field_height, screen_length, screen_height)
+                                                      89, parameter_field_height, screen_length, screen_height)
 
         grid = Grid(Dimensions(x, y, length, height), None, 1, True)
         grid.turn_into_grid(parameter_fields + [output_field], None, None)
@@ -148,17 +148,3 @@ class FunctionTestingScreen(Screen):
 
             test_case = TestCase(inputs, function_field.output.text)
             self.function.test_cases.append(test_case)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
