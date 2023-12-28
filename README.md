@@ -1,7 +1,5 @@
 Finished Development: 01/16/2022
 
-First 2 years of programming
-
 # Summary
 This project was designed to help reduce the amount of boilerplate code that is needed to write for testing code. The 
 user would type in the path of the file that they wanted to test and then through the GUI design the test cases. At the 
@@ -20,14 +18,18 @@ expected output when the function is called with those parameters. Once you are 
 
 # Images
 ## Choose File Screen
-![Choose File Screen](documentation/Choose File Screen.png)
+![Choose File Screen](documentation/Choose%20File%20Screen.png)
 
 ## All Functions Screen
-![All Functions Screen](documentation/All Functions Screen.png)
+![All Functions Screen](documentation/All%20Functions%20Screen.png)
 
 
 ## Test Specific Function Screen
-![Testing Specific Function Screen](documentation/Test Specific Function Screen.png)
+![Testing Specific Function Screen](documentation/Test%20Specific%20Function%20Screen.png)
 
 ## Example Output
-![Example Output](documentation/Example Output.png)
+![Example Output](documentation/Example%20Output.png)
+
+# How to Run
+- Install pygame by typing 'pip install pygame'
+- Run 'game_runner.py' in the root directory of the project
